@@ -1,0 +1,25 @@
+    # ใช้ for loop ที่ละ example เพราะ vectorize ยาก เพราะต้อง convolution ทีละ step ในรูปด้วย
+    for i in range(m):
+        # หยิบ 1 example
+        a_prev_pad = A_prev_pad[i,:,:,:] # (n_H_prev_pad, n_W_prev_pad, n_C_prev)  1  volume example 
+        
+        # เริ่มการ convolution
+        # ไล่จากบนลงล่าง
+        # a_prev_pad.shape[0] = n_H_prev_pad เวลา วาง filter จะทาบลงบนส่วนที่ pad ด้วยเพราะงั้นต้องใช้ shape ของ ที่pad มาแล้ว
+        # อย่าลืม stride 
+        # สมมติ ความสูง 5 pixel จะ ไล่จาก 0-4 ถ้า stride = 2 , filter = 2x2 >>>> h จะรันแค่จาก 0 , 2 ที่ iteration ที่ 2 ที่ h = 2 filter จะทาบสุดขอบพอดี
+        for h in range(0,a_prev_pad.shape[0],stride):        # loop over vertical axis ของ input
+            # จุด h ณ ตำแหน่งนี้ จะเป็นมุม "ซ้ายบนของ input ที่เราจะทาบด้วย filter"
+           # จุดเริ่มในแนวตั้ง = ตำแหน่ง h
+            vert_start = h
+            # จุดสิ้นสุดแนวตั้ง = + ตามขนาด filter f
+            vert_end = h+f  
+            '''
+            ข้อสังเกตุ สมมติ ขนาด filter = 2x2  , f = 2
+            ตอนนี้ h = 0 
+            vert_start = h = 0
+            vert_end = h+f = 0+2 = 2
+            
+            เวลา grab element ใน array ใช้ [0:2] = เอาelementที่ 0 1 ตรงกับที่เราต้องการตามขนาด filter
+            '''
+            for w in range(None):       # loop over horizontal axis ของ input
